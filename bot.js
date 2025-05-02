@@ -7,6 +7,7 @@ const { CohereClient } = require('cohere-ai');
 const connectDB = require('./db'); // 🔗 MongoDB connection
 const registerRoute = require('./auth/register'); // 🧩 Registration route
 const loginRoute = require('./auth/login'); // 🔐 Login + 2FA route
+const verifyRoute = require('./auth/verify'); // ✅ 2FA verification route
 
 // Load environment variables from api.env
 dotenv.config({ path: './api.env' });
@@ -37,6 +38,7 @@ const cohere = new CohereClient({
 // 🔐 Register Route
 app.use('/api', registerRoute); // POST /api/register
 app.use('/api/login', loginRoute); // POST /api/login
+app.use('/api/verify', verifyRoute); // POST /api/verify
 
 // Health Check Route
 app.get('/', (req, res) => {
