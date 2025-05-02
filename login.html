@@ -97,25 +97,27 @@
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-      const res = await fetch('https://it-helpdesk-bot.onrender.com/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+  const res = await fetch('https://it-helpdesk-bot.onrender.com/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
 
-      const data = await res.json();
-      if (res.ok) {
-        alert('Verification code sent to email');
-        window.location.href = 'verify.html';
-      } else {
-        alert(data.error || 'Login failed');
-      }
-    });
+  const data = await res.json();
+
+  if (res.ok) {
+    alert('Verification code sent to email');
+    window.location.href = 'verify.html';
+  } else {
+    alert(data.message || 'Login failed');
+  }
+});
+
   </script>
 </body>
 </html>

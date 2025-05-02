@@ -149,8 +149,11 @@
         async function send() {
             const input = document.getElementById('input');
             const message = input.value.trim();
+            input.disabled = true;
             if (!message) return;
             appendMessage('You', message, 'user');
+            input.disabled = false;
+            input.focus();
             input.value = '';
 
             try {
