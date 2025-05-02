@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid email' });
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.passwordHash); // ✅ FIXED HERE
     if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -42,3 +42,4 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
+
