@@ -5,86 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Verify Code | IT Helpdesk</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background-color: #f0f2f5;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1556742031-c6961e8560b0') no-repeat center center fixed;
+      background-size: cover;
       display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
-      margin: 0;
+      align-items: center;
+      justify-content: center;
     }
-    .verify-box {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 350px;
-      text-align: center;
+    .container {
+      width: 800px;
+      display: flex;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
     }
-    .verify-box h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .verify-box input[type="email"],
-    .verify-box input[type="text"] {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .verify-box button {
-      background-color: #0ca750;
+    .left {
+      width: 40%;
+      background: #28a745;
       color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
-      cursor: pointer;
-      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 30px;
     }
-    .verify-box button:hover {
-      background-color: #089a49;
+    .left h2 {
+      margin-bottom: 20px;
+    }
+    .left button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    .right {
+      background: white;
+      padding: 40px;
+      width: 60%;
+    }
+    .right h2 {
+      margin-bottom: 30px;
+    }
+    .right input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .right button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
     }
     .error-message {
       color: red;
       font-size: 0.9em;
-      display: none;
       margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="verify-box">
-    <h2>Enter Verification Code</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="text" id="code" placeholder="6-digit code" maxlength="6" required />
-    <button onclick="verifyCode()">Verify</button>
-    <p class="error-message" id="error">Verification failed. Try again.</p>
+  <div class="container">
+    <div class="left">
+      <h2>Verify Identity</h2>
+      <button onclick="location.href='login.html'">Login</button>
+      <button onclick="location.href='register.html'">Register</button>
+    </div>
+    <div class="right">
+      <h2>Enter Verification Code</h2>
+      <form id="verifyForm">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="text" id="code" placeholder="6-digit code" maxlength="6" required />
+        <button type="submit">Verify</button>
+        <p class="error-message" id="error"></p>
+      </form>
+    </div>
   </div>
 
   <script>
-    async function verifyCode() {
+    document.getElementById('verifyForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const code = document.getElementById('code').value.trim();
       const errorMsg = document.getElementById('error');
 
-      const response = await fetch('/api/verify', {
+      const response = await fetch('https://it-securehelpdesk-bot.onrender.com/api/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code })
       });
 
       const result = await response.json();
-
       if (response.ok) {
         window.location.href = 'help.html';
       } else {
         errorMsg.innerText = result.message || 'Invalid code';
         errorMsg.style.display = 'block';
       }
-    }
+    });
   </script>
 </body>
 </html>
