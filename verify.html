@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Code | IT Helpdesk</title>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .verify-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    .verify-box h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .verify-box input[type="email"],
+    .verify-box input[type="text"] {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .verify-box button {
+      background-color: #0ca750;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .verify-box button:hover {
+      background-color: #089a49;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-box">
+    <h2>Enter Verification Code</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="text" id="code" placeholder="6-digit code" maxlength="6" required />
+    <button onclick="verifyCode()">Verify</button>
+    <p class="error-message" id="error">Verification failed. Try again.</p>
+  </div>
+
+  <script>
+    async function verifyCode() {
+      const email = document.getElementById('email').value.trim();
+      const code = document.getElementById('code').value.trim();
+      const errorMsg = document.getElementById('error');
+
+      const response = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        window.location.href = 'help.html';
+      } else {
+        errorMsg.innerText = result.message || 'Invalid code';
+        errorMsg.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
