@@ -1,30 +1,30 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
-
-router.post('/', async (req, res) => {
-  const { username, email, password } = req.body;
+// This is FRONTEND logic
+document.getElementById('registerForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
 
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already registered' });
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: name, email, password })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert('Registration successful!');
+      window.location.href = 'login.html';
+    } else {
+      alert(data.message || 'Registration failed.');
     }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const newUser = new User({ username, email, passwordHash });
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    console.error('Error during registration:', err.message);
-    res.status(500).json({ message: 'Server error during registration' });
+    console.error('Error:', err.message);
+    alert('Failed to register.');
   }
 });
 
-module.exports = router;
 
 
 
