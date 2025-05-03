@@ -8,8 +8,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c') no-repeat center center fixed;
-      background-size: cover;
+      background: #f4f4f4; /* fallback color */
       display: flex;
       height: 100vh;
       align-items: center;
@@ -78,60 +77,28 @@
   </style>
 </head>
 <body>
-    <div class="container">
-        <div class="left">
-            <h2>Welcome Back</h2>
-            <button onclick="location.href='login.html'">Login</button>
-            <button onclick="location.href='register.html'">Register</button>
-            <button onclick="alert('Feature coming soon!')">Forgot Password?</button>
-        </div>
-        <div class="right">
-            <h2>Login Here</h2>
-            <form id="loginForm">
-                <input type="email" id="email" placeholder="Email" required />
-                <input type="password" id="password" placeholder="Password" required />
-                <button type="submit">Login</button>
-                <div class="forgot"><a href="#">Forgot Password?</a></div>
-            </form>
-        </div>
+  <div class="container">
+    <div class="left">
+      <h2>Welcome Back</h2>
+      <button onclick="location.href='login.html'">Login</button>
+      <button onclick="location.href='register.html'">Register</button>
+      <button onclick="alert('Feature coming soon!')">Forgot Password?</button>
     </div>
-    <script>
-      document.getElementById('loginForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-    
-        try {
-          const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-          });
-    
-          let data;
-          try {
-            data = await res.json();
-          } catch (e) {
-            throw new Error('Server did not return valid JSON');
-          }
-    
-          if (!res.ok) {
-            alert(data.message || 'Login failed');
-            return;
-          }
-    
-          alert('Verification code sent to your email.');
-          window.location.href = 'verify.html';
-    
-        } catch (err) {
-          console.error('Fetch error:', err.message);
-          alert('Login request failed. Please check console for details.');
-        }
-      });
-    </script>
-       
+    <div class="right">
+      <h2>Login Here</h2>
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+        <div class="forgot"><a href="#">Forgot Password?</a></div>
+      </form>
+    </div>
+  </div>
 
+  <!-- ✅ Load JS securely from public/js/login.js -->
+  <script src="auth/login.js" defer></script>
 </body>
 </html>
+
 
 
