@@ -16,44 +16,43 @@ dotenv.config({ path: './api.env' });
 const app = express();
 const PORT = process.env.PORT || 3978;
 
-// Connect to MongoDB
+// Connect to MongoDB Atlas
 connectDB();
 
-// Security Middlewares
+// Security middlewares
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-// Rate Limiting
+// Rate limiting to prevent abuse
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 30,
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30, // limit each IP to 30 requests per windowMs
 });
 app.use(limiter);
 
-// Serve static HTML files from root directory
+// ✅ Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname)));
 
-// Root route → redirect to login.html
+// ✅ Root route to serve login.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// Cohere Init
+// ✅ Setup Cohere AI
 const cohere = new CohereClient({
   token: process.env.COHERE_API_KEY,
 });
 
-// API Routes
+// ✅ Auth routes
 app.use('/api', registerRoute);
 app.use('/api/login', loginRoute);
 app.use('/api/verify', verifyRoute);
 
-// Chat Endpoint
+// ✅ Chat endpoint
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
-
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
     }
@@ -73,9 +72,11 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
+// ✅ Start server
 app.listen(PORT, () => {
   console.log(`✅ Helpdesk bot running on http://localhost:${PORT}`);
 });
+
 
 
 

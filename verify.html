@@ -98,21 +98,28 @@
       const email = document.getElementById('email').value.trim();
       const code = document.getElementById('code').value.trim();
       const errorMsg = document.getElementById('error');
-
-      const response = await fetch('https://it-securehelpdesk-bot.onrender.com/api/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code })
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        window.location.href = 'help.html';
-      } else {
-        errorMsg.innerText = result.message || 'Invalid code';
+  
+      try {
+        const response = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code })
+        });
+  
+        const result = await response.json();
+        if (response.ok) {
+          window.location.href = 'help.html';
+        } else {
+          errorMsg.innerText = result.message || 'Invalid code';
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.innerText = 'Verification request failed.';
         errorMsg.style.display = 'block';
+        console.error('Verification error:', err);
       }
     });
   </script>
+  
 </body>
 </html>
