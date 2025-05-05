@@ -92,32 +92,8 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('verifyForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const code = document.getElementById('code').value.trim();
-      const errorMsg = document.getElementById('error');
+ <script src="auth/verify.js"></script>
 
-      try {
-        const response = await fetch('/api/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code })
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          window.location.href = 'help.html'; // Redirect to chatbot
-        } else {
-          errorMsg.innerText = result.message || 'Invalid or expired code.';
-        }
-      } catch (err) {
-        errorMsg.innerText = 'Verification failed. Please try again.';
-        console.error('Verification error:', err);
-      }
-    });
-  </script>
 </body>
 </html>
 

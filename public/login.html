@@ -52,33 +52,9 @@
       <div class="link">New user? <a href="register.html">Register</a></div>
     </form>
   </div>
+  
+  <script src="auth/login.js"></script>
 
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      try {
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          alert('Verification code sent to your email.');
-          window.location.href = 'verify.html';
-        } else {
-          alert(data.message || 'Login failed.');
-        }
-      } catch (err) {
-        console.error('Login error:', err.message);
-        alert('Something went wrong during login.');
-      }
-    });
-  </script>
 </body>
 </html>
 
