@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!message) return;
 
     // Show user message
-    chat.innerHTML += `<div class="user">You: ${message}</div>`;
+    chat.innerHTML += `<div class="message user">${message}</div>`;
     input.value = "";
 
     try {
@@ -28,11 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
 
       // Show bot reply or fallback
-      chat.innerHTML += `<div class="bot">Bot: ${data.reply || "Sorry, no response."}</div>`;
+      chat.innerHTML += `<div class="message bot">${data.reply || "Sorry, no response."}</div>`;
     } catch (err) {
       console.error("Chat request failed:", err);
-      chat.innerHTML += `<div class="bot">Bot: Error contacting server.</div>`;
+      chat.innerHTML += `<div class="message bot">Bot: Error contacting server.</div>`;
     }
+
+    chat.scrollTop = chat.scrollHeight; // Auto scroll
   });
 });
+
 
