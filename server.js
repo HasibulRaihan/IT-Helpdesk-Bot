@@ -35,8 +35,11 @@ app.use('/api/register', registerRoute);
 app.use('/api/verify', verifyRoute);
 
 // Smart chatbot API (Cohere)
-const cohere = require('cohere-ai');
-cohere.init(process.env.COHERE_API_KEY);
+const { CohereClient } = require("cohere-ai");
+const cohere = new CohereClient({
+  token: process.env.COHERE_API_KEY,
+});
+
 
 app.post('/api/chat', async (req, res) => {
   try {
