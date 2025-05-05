@@ -5,18 +5,19 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config();
 
-const connectDB = require('./db'); // 👈 Call this below
+const connectDB = require('./db');
 
-// Route imports
+// Import route handlers
 const loginRoute = require('./auth/login');
 const registerRoute = require('./auth/register');
 const verifyRoute = require('./auth/verify');
+const chatRoute = require('./auth/chat'); // ✅ New Chatbot route
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-connectDB(); // ✅ This was missing in your previous version
+connectDB();
 
 // Middlewares
 app.use(express.json());
@@ -27,15 +28,16 @@ app.use(rateLimit({
   max: 30,
 }));
 
-// Static files (frontend)
+// Serve static files (frontend)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // API routes
 app.use('/api/login', loginRoute);
 app.use('/api/register', registerRoute);
 app.use('/api/verify', verifyRoute);
+app.use('/api/chat', chatRoute); // ✅ This enables chatbot connection
 
-// HTML page routes for Render
+// HTML Routes
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, 'public', 'login.html'))
 );
@@ -52,7 +54,7 @@ app.get('/help.html', (req, res) =>
   res.sendFile(path.join(__dirname, 'public', 'help.html'))
 );
 
-// Catch-all 404
+// Fallback 404
 app.use((req, res) => {
   res.status(404).send('Page Not Found');
 });
@@ -61,4 +63,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
