@@ -7,7 +7,9 @@ router.post('/', async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid email' });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email' });
+    }
 
     const now = new Date();
 
@@ -16,21 +18,20 @@ router.post('/', async (req, res) => {
       !user.twoFactorExpire ||
       user.twoFactorExpire < now
     ) {
-      return res.status(400).json({ message: 'Invalid or expired code' });
+      return res.status(400).json({ message: 'Invalid or expired verification code' });
     }
 
-    // ✅ Clear code after use
+    // ✅ Clear the code after successful verification
     user.twoFactorCode = null;
     user.twoFactorExpire = null;
     await user.save();
 
-    res.json({ message: 'Verification successful' });
+    res.status(200).json({ message: 'Verification successful' });
 
   } catch (err) {
-    console.error('Verification error:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Verification error:', err);
+    res.status(500).json({ message: 'Server error during verification' });
   }
 });
 
 module.exports = router;
-

@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Verify Code | IT Helpdesk</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | IT Helpdesk</title>
   <style>
-    /* your styles stay the same */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -25,7 +24,7 @@
     }
     .left {
       width: 40%;
-      background: #007bff;
+      background: #28a745;
       color: white;
       display: flex;
       flex-direction: column;
@@ -59,7 +58,7 @@
       border-radius: 5px;
     }
     .right button {
-      background-color: #007bff;
+      background-color: #28a745;
       color: white;
       border: none;
       padding: 12px;
@@ -68,29 +67,57 @@
       font-size: 16px;
       cursor: pointer;
     }
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="left">
-      <h2>Join the Helpdesk</h2>
+      <h2>Verify Identity</h2>
       <button onclick="location.href='login.html'">Login</button>
-      <button onclick="alert('You are on the register page.')">Register</button>
+      <button onclick="location.href='register.html'">Register</button>
     </div>
     <div class="right">
-      <h2>Create Account</h2>
-      <form id="registerForm">
-        <input type="text" id="name" placeholder="Full Name" required />
+      <h2>Enter Verification Code</h2>
+      <form id="verifyForm">
         <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <button type="submit">Register</button>
+        <input type="text" id="code" placeholder="6-digit code" maxlength="6" required />
+        <button type="submit">Verify</button>
+        <p class="error-message" id="error"></p>
       </form>
     </div>
   </div>
 
-  <script src="auth/register.js" defer></script>
+  <script>
+    document.getElementById('verifyForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const code = document.getElementById('code').value.trim();
+      const errorMsg = document.getElementById('error');
 
+      try {
+        const response = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          window.location.href = 'help.html'; // Redirect to chatbot
+        } else {
+          errorMsg.innerText = result.message || 'Invalid or expired code.';
+        }
+      } catch (err) {
+        errorMsg.innerText = 'Verification failed. Please try again.';
+        console.error('Verification error:', err);
+      }
+    });
+  </script>
 </body>
 </html>
-
 
