@@ -26,7 +26,8 @@ router.post('/', async (req, res) => {
     user.twoFactorExpire = null;
     await user.save();
 
-    res.status(200).json({ message: 'Verification successful' });
+    // ✅ Updated here to include success field
+    res.status(200).json({ success: true, message: 'Verification successful' });
 
   } catch (err) {
     console.error('Verification error:', err);
@@ -35,3 +36,4 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
+
