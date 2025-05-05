@@ -53,7 +53,7 @@ app.post('/api/chat', async (req, res) => {
       temperature: 0.7,
     });
 
-    const botReply = response.body.generations[0].text.trim();
+    const botReply = response.generations[0].text.trim();
     res.json({ reply: botReply });
   } catch (err) {
     console.error('Cohere error:', err.message);
